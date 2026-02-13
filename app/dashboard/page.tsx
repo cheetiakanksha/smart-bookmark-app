@@ -1,76 +1,79 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
+import Navbar from "@/components/Navbar";
+import "@/styles/dashboard.css";
+
 
 type Bookmark = {
   id: string;
   title: string;
   url: string;
   user_id: string;
-  created_at?: string;
 };
+
+const pastelColors = [
+  "#FFEBE8",
+  "#FFF4CC",
+  "#E8F6FF",
+  "#E8FFE8",
+  "#FDE8FF",
+  "#E8FFF7",
+];
 
 export default function Dashboard() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [showAdd, setShowAdd] = useState(false);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
-  const [dark, setDark] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState("");
+  const [user, setUser] = useState<{ email: string; name: string | null } | null>(null);
 
-  const channelRef = useRef<any>(null);
-  const hasSubscribed = useRef(false); // 🔥 prevents double subscription
-
-  // ---------------------------------
-  // FETCH + REALTIME (SAFE VERSION)
-  // ---------------------------------
+  // -----------------------------
+  // FETCH + REALTIME
+  // -----------------------------
   useEffect(() => {
-    if (hasSubscribed.current) return;
-    hasSubscribed.current = true;
+    let channel: any;
 
     const setup = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/";
+        return;
+      }
+      setUser({
+        email: user.email!,
+        name: user.user_metadata?.full_name || null,
+      });
 
-      if (!user) return;
-
-      // Initial fetch
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("bookmarks")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
+      if (data) setBookmarks(data);
 
-      if (!error && data) setBookmarks(data);
-
-      // Realtime
-      channelRef.current = supabase
-        .channel(`bookmarks-${user.id}`)
+      channel = supabase
+        .channel("bookmarks-realtime")
         .on(
           "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "bookmarks",
-            filter: `user_id=eq.${user.id}`,
-          },
+          { event: "*", schema: "public", table: "bookmarks", filter: `user_id=eq.${user.id}` },
           (payload) => {
             if (payload.eventType === "INSERT") {
               setBookmarks((prev) => {
-                // 🔥 prevent duplicates
-                if (prev.some((b) => b.id === payload.new.id)) {
-                  return prev;
-                }
+                const exists = prev.find((b) => b.id === (payload.new as Bookmark).id);
+                if (exists) return prev;
                 return [payload.new as Bookmark, ...prev];
               });
             }
 
             if (payload.eventType === "DELETE") {
-              setBookmarks((prev) =>
-                prev.filter((b) => b.id !== payload.old.id)
-              );
+              const deletedId = payload.old?.id;
+              if (!deletedId) return;
+              setBookmarks((prev) => prev.filter((b) => b.id !== deletedId));
             }
           }
         )
@@ -80,157 +83,105 @@ export default function Dashboard() {
     setup();
 
     return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-      }
+      if (channel) supabase.removeChannel(channel);
     };
   }, []);
 
-  // ---------------------------------
-  // ADD BOOKMARK (NO OPTIMISTIC UI)
-  // ---------------------------------
+  // -----------------------------
+  // ADD BOOKMARK
+  // -----------------------------
   const addBookmark = async () => {
     if (!title || !url) return;
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    setLoading(true);
 
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase.from("bookmarks").insert([
-      {
-        title,
-        url,
-        user_id: user.id,
-      },
-    ]);
+    const formattedUrl = url.startsWith("http") ? url : `https://${url}`;
 
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    setTitle("");
-    setUrl("");
-    setShowAdd(false);
-  };
-
-  // ---------------------------------
-  // DELETE BOOKMARK
-  // ---------------------------------
-  const deleteBookmark = async (id: string) => {
     const { error } = await supabase
       .from("bookmarks")
-      .delete()
-      .eq("id", id);
+      .insert([{ title, url: formattedUrl, user_id: user.id }]);
 
-    if (error) console.error(error);
+    if (!error) {
+      setToast("Bookmark added successfully!");
+      setTimeout(() => setToast(""), 2000);
+      setTitle("");
+      setUrl("");
+      setShowAdd(false);
+    }
+
+    setLoading(false);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/";
+  // -----------------------------
+  // DELETE
+  // -----------------------------
+  const deleteBookmark = async (id: string) => {
+    await supabase.from("bookmarks").delete().eq("id", id);
   };
 
   return (
-    <div className={dark ? "dark" : ""}>
-      <div className="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
+    <div className="bg-gray-50 min-h-screen pt-6">
+      {/* Navbar with Logout */}
+      <Navbar showLogout={true} />
 
-        {/* Controls */}
-        <div className="flex justify-between mb-8">
-          <button
-            onClick={() => setDark(!dark)}
-            className="px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:text-white"
-          >
-            {dark ? "Light Mode" : "Dark Mode"}
-          </button>
+      <div className="dashboard-container">
+  <div className="dashboard-header">
+    {user && (
+      <p className="greeting">
+        Hey, <span>{user.name || user.email}</span>
+      </p>
+    )}
+    <h1>Your Bookmark Vault</h1>
+    <p className="tagline">
+      Organize your favorite links quickly and beautifully
+    </p>
+  </div>
 
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white"
-          >
-            Logout
-          </button>
+  {!showAdd && (
+    <button onClick={() => setShowAdd(true)} className="add-bookmark-btn">
+      + Add Bookmark
+    </button>
+  )}
+
+  {showAdd && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="add-bookmark-form"
+    >
+      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <input type="text" placeholder="example.com" value={url} onChange={(e) => setUrl(e.target.value)} />
+
+      <div className="form-buttons">
+        <button onClick={addBookmark} className="add-btn">{loading ? "Adding..." : "Add"}</button>
+        <button onClick={() => setShowAdd(false)} className="cancel-btn">Cancel</button>
+      </div>
+    </motion.div>
+  )}
+
+  {toast && <div className="toast">{toast}</div>}
+
+  <div className={`bookmarks-grid ${bookmarks.length === 1 ? "single-card" : ""}`}>
+    {bookmarks.map((b, idx) => (
+      <div key={b.id} className="bookmark-card" style={{ backgroundColor: pastelColors[idx % pastelColors.length] }}>
+        <div>
+          <h3>{b.title}</h3>
+          <p>{b.url}</p>
         </div>
-
-        <h1 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white">
-          Your Bookmarks
-        </h1>
-
-        {!showAdd && (
-          <button
-            onClick={() => setShowAdd(true)}
-            className="px-6 py-2 bg-yellow-300 dark:bg-cyan-400 rounded-lg font-semibold mb-6"
-          >
-            Add Bookmark
-          </button>
-        )}
-
-        <AnimatePresence>
-          {showAdd && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="p-6 mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex flex-col gap-4 max-w-xl"
-            >
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-              />
-              <input
-                type="url"
-                placeholder="URL"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-              />
-              <button
-                onClick={addBookmark}
-                className="px-6 py-2 bg-green-400 rounded-lg font-semibold"
-              >
-                Add
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {bookmarks.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">
-              No bookmarks currently.
-            </p>
-          ) : (
-            bookmarks.map((b) => (
-              <motion.div
-                key={b.id}
-                layout
-                className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex justify-between items-center"
-              >
-                <a
-                  href={b.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-gray-900 dark:text-white break-all"
-                >
-                  {b.title}
-                </a>
-
-                <button
-                  onClick={() => deleteBookmark(b.id)}
-                  className="text-red-500"
-                >
-                  Delete
-                </button>
-              </motion.div>
-            ))
-          )}
+        <div className="card-buttons">
+          <button onClick={() => window.open(b.url, "_blank")} className="open-btn">Open</button>
+          <button onClick={() => deleteBookmark(b.id)} className="delete-btn">Delete</button>
         </div>
       </div>
+    ))}
+  </div>
+</div>
+
+
     </div>
   );
 }

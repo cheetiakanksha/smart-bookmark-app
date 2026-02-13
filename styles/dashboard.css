@@ -1,0 +1,199 @@
+/* Container for dashboard page */
+.dashboard-container {
+    
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem; /* top-bottom padding + left-right padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  background-color: #fff4cc;
+}
+
+/* Header section */
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.dashboard-header p.greeting {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0d0d0d; /* gray-700 */
+}
+
+.dashboard-header p.greeting span {
+  color: #c55727; /* yellow-500 */
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.dashboard-header p.tagline {
+  color: #6b7280; /* gray-500 */
+  max-width: 600px;
+}
+
+/* Add bookmark button */
+.add-bookmark-btn {
+  padding: 1rem 2rem;
+  background-color: #facc15;
+  border-radius: 9999px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.add-bookmark-btn:hover {
+  opacity: 0.9;
+}
+
+/* Add bookmark form */
+.add-bookmark-form {
+  background-color: white;
+  border: 2px solid rgb(242, 239, 239);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.add-bookmark-form input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.add-bookmark-form .form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.add-bookmark-form button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.add-bookmark-form button.add-btn {
+  background-color:#b7b6dc;
+  color: black;
+  border: 1px solid #d8dbe0;
+}
+.add-bookmark-form button.add-btn:hover {
+  background-color: #53639c;
+  
+}
+
+.add-bookmark-form button.cancel-btn {
+  border: 1px solid #d8dbe0;
+  background-color: #ef9090;
+}
+.add-bookmark-form button.cancel-btn:hover {
+  background-color: #dc2626;
+  
+}
+/* Toast */
+.toast {
+  color: #16a34a; /* green-600 */
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Bookmarks grid */
+
+.bookmarks-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  justify-content: center; /* Center the grid */
+}
+
+.bookmarks-grid.single-card {
+  justify-items: center;
+}
+
+/* Each card */
+.bookmark-card {
+  border-radius: 1.5rem;
+  border: 2px solid rgb(235, 223, 223);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 20rem; /* max width ensures it doesn't stretch too much */
+  box-shadow: 0 4px 6px rgba(0.1,0.1,0.1,0.1);
+}
+
+
+.bookmark-card h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.bookmark-card p {
+  color: #374151;
+  word-break: break-word;
+  font-size: 0.875rem;
+}
+
+/* Card buttons */
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.card-buttons button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+.card-buttons button.open-btn {
+  background-color: #b7b6dc;
+  
+}
+
+.card-buttons button.open-btn:hover {
+  background-color: #53639c;
+}
+
+.card-buttons button.delete-btn {
+  background-color: #ef9090;
+  
+}
+
+.card-buttons button.delete-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Responsive grid */
+@media (min-width: 768px) {
+  .bookmarks-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bookmarks-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

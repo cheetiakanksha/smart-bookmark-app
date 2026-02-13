@@ -1,0 +1,540 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  
+  margin:0;
+}
+
+/* NAVBAR */
+/* NAVBAR BASE */
+.navbar {
+  width: 100%;
+  padding: 22px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fdf6ec; /* soft pastel peach */
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Shadow on scroll */
+.navbar-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Container */
+.nav-container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Logo */
+.logo {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Animated underline */
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #e8a87c; /* pastel coral */
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.logo:hover::after {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 20px;
+  }
+}
+
+
+
+
+/* HERO FULL SCREEN */
+.hero {
+  min-height: 100vh;
+  background: #fff4cc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+}
+
+/* INNER CONTAINER */
+.hero-container {
+  flex: 1;
+  max-width: 1200px;
+  margin: auto;
+  padding: 80px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+/* LEFT SIDE */
+.hero-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.hero-heading {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.small-text {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.big-text {
+  font-size: 72px;
+  font-weight: 700;
+}
+
+.hero-subtext {
+  margin: 20px 0 30px;
+  font-size: 18px;
+  max-width: 450px;
+}
+
+/* BUTTON */
+.primary-btn {
+  padding: 14px 28px;
+  font-size: 16px;
+  background: black;
+  color: white;
+  border: 2px solid black;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.primary-btn:hover {
+  background: white;
+  color: black;
+}
+
+/* RIGHT SIDE */
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* SLIDER CARD */
+.slider-card {
+  background: white;
+  padding: 60px;
+  border-radius: 40px;
+  border: 3px solid black;
+  box-shadow: 8px 8px 0px black;
+  width: 320px;
+  text-align: center;
+  transition: 0.4s ease;
+}
+
+.slider-card h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.slider-card p {
+  font-size: 16px;
+}
+
+/* SCALLOP BORDER */
+.scallop-divider {
+  height: 80px;
+  background: radial-gradient(
+    circle at 40px -20px,
+    #fff4cc 40px,
+    transparent 41px
+  ) repeat-x;
+  background-size: 80px 80px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .big-text {
+    font-size: 48px;
+  }
+
+  .small-text {
+    font-size: 22px;
+  }
+
+  .slider-card {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* ACTIVE CARD */
+.active-slide {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* BUTTON */
+.primary-btn {
+  padding: 14px 28px;
+  font-size: 16px;
+  background: black;
+  color: white;
+  border: 2px solid black;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.primary-btn:hover {
+  background: white;
+  color: black;
+}
+
+/* RIGHT */
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.illustration-box {
+  font-size: 120px;
+  background: white;
+  padding: 60px;
+  border-radius: 40px;
+  border: 3px solid black;
+  box-shadow: 8px 8px 0px black;
+}
+
+/* SCALLOP BORDER */
+.scallop-divider {
+  height: 80px;
+  background: radial-gradient(circle at 40px -20px, #fff4cc 40px, transparent 41px) repeat-x;
+  background-size: 80px 80px;
+  margin-top: 60px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .big-text {
+    font-size: 48px;
+  }
+
+  .small-text {
+    font-size: 22px;
+  }
+
+  .hero-subtext {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .illustration-box {
+    font-size: 80px;
+    padding: 40px;
+  }
+}
+
+
+
+/* Responsive Grid Layout */
+
+.card-container {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile default */
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .card-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Card Design */
+
+.card {
+  background: #fff3d6;
+  padding: 40px 30px;
+  border-radius: 25px;
+
+  border: 3px solid black;
+
+  box-shadow:
+    8px 8px 0px black,
+    0 15px 30px rgba(0,0,0,0.15);
+
+  transition: all 0.3s ease;
+}
+
+.card h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.card p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Hover effect */
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    12px 12px 0px black,
+    0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Improve title size on small screens */
+@media (max-width: 480px) {
+  .center-title {
+    font-size: 32px;
+  }
+}
+
+/* ----------------------------
+   DASHBOARD PAGE STYLES
+---------------------------- */
+
+/* BODY / PAGE LAYOUT */
+.bg-gray-50 {
+  background-color: #fefcf6; /* soft pastel background for dashboard */
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+.max-w-6xl {
+  max-width: 1200px;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.py-10 {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* HEADER */
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.md\:text-5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+.font-bold {
+  font-weight: 700;
+}
+.text-gray-500 {
+  color: #6b7280;
+}
+.mt-2 {
+  margin-top: 8px;
+}
+
+/* BUTTONS */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  opacity: 0.9;
+}
+.border-black {
+  border-color: #000;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.px-6 {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.py-3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.bg-yellow-400 {
+  background-color: #f5c64c;
+}
+.hover\:bg-black:hover {
+  background-color: #000;
+}
+.hover\:text-white:hover {
+  color: #fff;
+}
+
+/* ADD BOOKMARK FORM */
+.rounded-3xl {
+  border-radius: 40px;
+}
+.border-2 {
+  border-width: 2px;
+  border-color: #000;
+}
+.shadow {
+  box-shadow: 8px 8px 0px #000;
+}
+.bg-white {
+  background-color: #fff;
+}
+.p-6 {
+  padding: 24px;
+}
+.space-y-4 > * + * {
+  margin-top: 16px;
+}
+input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* TOAST */
+.text-green-600 {
+  color: #16a34a;
+}
+.mb-4 {
+  margin-bottom: 16px;
+}
+.font-medium {
+  font-weight: 500;
+}
+
+/* BOOKMARK CARDS */
+.grid {
+  display: grid;
+}
+.md\:grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.lg\:grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.gap-6 {
+  gap: 24px;
+}
+
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.items-center {
+  align-items: center;
+}
+.mt-auto {
+  margin-top: auto;
+}
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+/* INDIVIDUAL CARD STYLING */
+.rounded-3xl {
+  border-radius: 40px;
+}
+.border-2 {
+  border-width: 2px;
+  border-color: #000;
+}
+.shadow {
+  box-shadow: 8px 8px 0px #000;
+}
+.p-6 {
+  padding: 24px;
+}
+.bg-white {
+  background-color: #fff;
+}
+
+/* TEXT STYLES IN CARDS */
+.font-bold {
+  font-weight: 700;
+}
+.text-lg {
+  font-size: 1.125rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+}
+.text-gray-600 {
+  color: #4b5563;
+}
+.text-blue-500 {
+  color: #3b82f6;
+}
+.text-red-500 {
+  color: #ef4444;
+}

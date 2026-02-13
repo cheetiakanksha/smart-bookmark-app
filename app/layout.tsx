@@ -1,30 +1,15 @@
-import "./globals.css";
-import { Inter, Poppins } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-poppins",
-});
+import "../styles/globals.css";
+import { inter } from "./fonts";
 
 export const metadata = {
-  title: "Smart Bookmark Vault",
-  description: "Save beautifully. Access instantly.",
+  title: "BookMarkr",
+  description: "Creative Bookmark Manager",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
+      <body className={inter.className}>
         {children}
       </body>
     </html>

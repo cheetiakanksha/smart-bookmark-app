@@ -34,7 +34,7 @@ A modern, minimalistic, and private bookmark manager that allows users to save, 
 
 ## 🌐 Live Demo
 
-You can try the app here: [https://your-vercel-deployment-url.vercel.app](https://your-vercel-deployment-url.vercel.app)
+You can try the app here: [https://smart-bookmark-app-9zl7.vercel.app/](https://smart-bookmark-app-9zl7.vercel.app/)
 
 ---
 
@@ -77,6 +77,3 @@ While building the Smart Bookmark App, I faced several challenges:
    - **Problem:** Greeting and page title were too close to the navbar.  
    - **Solution:** Added padding/margin to the header section to make “Hey, Name” and title visually balanced and centered.
 
-7. **Clickable “Open” button for bookmark URLs**  
-   - **Problem:** Initially used an anchor tag; not consistent with buttons.  
-   - **Solution:** Converted to a button with `onClick` to open the URL in a new tab.
